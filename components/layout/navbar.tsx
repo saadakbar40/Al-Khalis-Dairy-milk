@@ -2,20 +2,23 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, ShoppingBag, Heart, Menu, X, ChevronDown, Phone } from 'lucide-react';
+import { Search, ShoppingBag, Heart, Menu, X, ChevronDown, Phone, User, LogOut } from 'lucide-react';
 import { Logo } from './logo';
 import { ThemeToggle } from './theme-toggle';
 import { SearchDialog } from './search-dialog';
 import { CartDrawer } from './cart-drawer';
+import { UserMenu } from './user-menu';
 import { useCart } from '@/components/providers/cart-provider';
 import { useWishlist } from '@/components/providers/wishlist-provider';
+import { useAuth } from '@/components/providers/auth-provider';
 import { useScrolled } from '@/hooks/use-ui';
 import { categories } from '@/lib/data';
 import { SiteConfig } from '@/lib/site-config';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
+import { toast } from 'sonner';
 
 const navLinks = [
   { href: '/', label: 'Home' },
@@ -29,14 +32,23 @@ const navLinks = [
 
 export function Navbar() {
   const pathname = usePathname();
+  const router = useRouter();
   const scrolled = useScrolled(20);
   const [searchOpen, setSearchOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const { count, setIsOpen } = useCart();
   const { count: wishCount } = useWishlist();
+  const { user, isAuthenticated, signOut } = useAuth();
 
   const isActive = (href: string) =>
     href === '/' ? pathname === '/' : pathname.startsWith(href);
+
+  const handleSignOut = () => {
+    signOut();
+    setMobileOpen(false);
+    toast.success('Signed out successfully');
+    router.push('/');
+  };
 
   return (
     <>
@@ -144,6 +156,8 @@ export function Navbar() {
               )}
             </button>
 
+            <UserMenu />
+
             <a
               href={`tel:${SiteConfig.contact.phonePrimary.replace(/\s/g, '')}`}
               className="hidden items-center gap-2 rounded-full border border-border/60 px-3 py-2 text-sm font-medium transition-colors hover:bg-secondary xl:inline-flex"
@@ -228,6 +242,52 @@ export function Navbar() {
                       {cat.name}
                     </Link>
                   ))}
+                </div>
+
+                {/* Account section */}
+                <div className="mt-4 border-t border-border pt-4">
+                  <p className="px-4 pb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                    Account
+                  </p>
+                  {isAuthenticated ? (
+                    <>
+                      <div className="flex items-center gap-3 rounded-xl px-4 py-3">
+                        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/10 text-xs font-semibold text-primary">
+                          {user?.name?.split(' ').map((n) => n[0]).slice(0, 2).join('').toUpperCase() || 'U'}
+                        </div>
+                        <div className="min-w-0">
+                          <p className="truncate text-sm font-semibold">{user?.name}</p>
+                          <p className="truncate text-xs text-muted-foreground">{user?.email}</p>
+                        </div>
+                      </div>
+                      <Link
+                        href="/wishlist"
+                        onClick={() => setMobileOpen(false)}
+                        className="flex items-center gap-3 rounded-xl px-4 py-2.5 text-sm hover:bg-secondary/60"
+                      >
+                        <Heart className="h-4 w-4 text-muted-foreground" />
+                        Wishlist
+                      </Link>
+                      <button
+                        onClick={handleSignOut}
+                        className="flex w-full items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-medium text-destructive hover:bg-destructive/10"
+                      >
+                        <LogOut className="h-4 w-4" />
+                        Sign Out
+                      </button>
+                    </>
+                  ) : (
+                    <div className="flex flex-col gap-2 px-4">
+                      <Button asChild className="w-full" onClick={() => setMobileOpen(false)}>
+                        <Link href="/login">
+                          <User className="mr-2 h-4 w-4" /> Sign In
+                        </Link>
+                      </Button>
+                      <Button asChild variant="outline" className="w-full" onClick={() => setMobileOpen(false)}>
+                        <Link href="/signup">Create Account</Link>
+                      </Button>
+                    </div>
+                  )}
                 </div>
               </div>
 

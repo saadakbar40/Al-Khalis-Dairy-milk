@@ -82,7 +82,7 @@ export default function OrderPage() {
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="phone">Phone Number *</Label>
-                    <Input id="phone" required value={form.phone} onChange={update('phone')} placeholder="+92 30 61487240" />
+                    <Input id="phone" required value={form.phone} onChange={update('phone')} placeholder="03061487240" />
                   </div>
                   <div className="space-y-2 sm:col-span-2">
                     <Label htmlFor="email">Email</Label>

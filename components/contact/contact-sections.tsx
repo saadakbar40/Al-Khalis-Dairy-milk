@@ -51,7 +51,7 @@ export function ContactForm() {
         </div>
         <div className="space-y-2">
           <Label htmlFor="phone">Phone Number</Label>
-          <Input id="phone" value={form.phone} onChange={update('phone')} placeholder="+92 30 61487240" />
+          <Input id="phone" value={form.phone} onChange={update('phone')} placeholder="03061487240" />
         </div>
       </div>
       <div className="grid gap-5 sm:grid-cols-2">

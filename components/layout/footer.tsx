@@ -47,6 +47,15 @@ const footerLinks = [
       { label: 'Wishlist', href: '/wishlist' },
     ],
   },
+  {
+    title: 'Account',
+    links: [
+      { label: 'Sign In', href: '/login' },
+      { label: 'Sign Up', href: '/signup' },
+      { label: 'Wishlist', href: '/wishlist' },
+      { label: 'Order Now', href: '/order' },
+    ],
+  },
 ];
 
 const socialLinks = [
@@ -74,7 +83,7 @@ export function Footer() {
           <Newsletter />
         </div>
 
-        <div className="grid gap-10 py-12 md:grid-cols-2 lg:grid-cols-5">
+        <div className="grid gap-10 py-12 md:grid-cols-2 lg:grid-cols-6">
           <div className="lg:col-span-2">
             <Logo />
             <p className="mt-4 max-w-xs text-sm text-muted-foreground">

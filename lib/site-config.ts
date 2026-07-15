@@ -15,21 +15,21 @@ export const SiteConfig = {
   // ---- EDITABLE CONTACT DETAILS (change freely) ----
   contact: {
     address: {
-      line1: 'Plot 24, Dairy Farm Road',
-      line2: 'Industrial Area, Phase 4',
+      line1: 'F-11',
+      line2: 'Islamabad Capital Territory',
       city: 'Islamabad',
-      province: 'Punjab',
-      postalCode: '54000',
+      province: 'Islamabad Capital Territory',
+      postalCode: '',
       country: 'Pakistan',
-      full: 'Plot 24, Dairy Farm Road, Industrial Area, F 11, Islamabad, Punjab 54000, Pakistan',
+      full: 'F-11, Islamabad, Islamabad Capital Territory, Pakistan',
     },
     // Replace with your own Google Maps embed src URL
     mapEmbedUrl:
-      'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d217760.00000000001!2d74.2!3d31.5!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39190443e87d90eb%3A0x1234567890abcdef!2sLahore%2C%20Punjab%2C%20Pakistan!5e0!3m2!1sen!2sus!4v1700000000000',
+      'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3317.5!2d73.0443!3d33.6844!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMzPCsDQwJzIzLjgiTiA3M8KwMDInMzEuNSJF!5e0!3m2!1sen!2sus!4v1700000000000',
     email: 'saad.akbar.global@gmail.com',
-    phonePrimary: '+92 306 1487240',
-    phoneSecondary: '+92 15 45 15 175',
-    whatsapp: '+92 306 1487240',
+    phonePrimary: '03061487240',
+    phoneSecondary: '03154515175',
+    whatsapp: '03061487240',
   },
 
   hours: [
