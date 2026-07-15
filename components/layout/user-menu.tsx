@@ -24,7 +24,7 @@ export function UserMenu() {
     router.push('/');
   };
 
-  // Don't render anything until mounted to avoid hydration mismatch
+  // Placeholder until mounted to avoid hydration mismatch
   if (!mounted) {
     return (
       <div className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-border/60">
@@ -35,28 +35,22 @@ export function UserMenu() {
 
   if (!isAuthenticated) {
     return (
-      <div className="flex items-center gap-1.5">
-        <Link
-          href="/login"
-          className="hidden rounded-full px-3 py-2 text-sm font-medium text-foreground transition-colors hover:text-primary sm:inline-flex"
+      <div className="flex items-center gap-2">
+        <Button
+          asChild
+          variant="outline"
+          size="sm"
+          className="h-9 rounded-full px-4 text-sm font-medium transition-colors"
         >
-          Sign In
-        </Link>
+          <Link href="/login">Sign In</Link>
+        </Button>
         <Button
           asChild
           size="sm"
-          className="hidden h-9 rounded-full px-4 sm:inline-flex"
+          className="hidden h-9 rounded-full px-4 text-sm font-medium sm:inline-flex"
         >
           <Link href="/signup">Sign Up</Link>
         </Button>
-        {/* Mobile icon */}
-        <Link
-          href="/login"
-          aria-label="Sign in"
-          className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-border/60 text-foreground transition-colors hover:bg-secondary sm:hidden"
-        >
-          <User className="h-[18px] w-[18px]" />
-        </Link>
       </div>
     );
   }
@@ -69,6 +63,7 @@ export function UserMenu() {
     .toUpperCase() || 'U';
 
   const menuItems = [
+    { label: 'My Profile', href: '/account', icon: User },
     { label: 'My Orders', href: '/order', icon: ShoppingBag },
     { label: 'Wishlist', href: '/wishlist', icon: Heart },
     { label: 'Account Settings', href: '/account', icon: Settings },
@@ -108,7 +103,7 @@ export function UserMenu() {
             <div className="p-2">
               {menuItems.map((item) => (
                 <Link
-                  key={item.href}
+                  key={item.label}
                   href={item.href}
                   onClick={() => setOpen(false)}
                   className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-secondary"

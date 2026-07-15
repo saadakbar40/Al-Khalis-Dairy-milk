@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, ShoppingBag, Heart, Menu, X, ChevronDown, Phone, User, LogOut } from 'lucide-react';
+import { Search, ShoppingBag, Heart, Menu, X, ChevronDown, User, LogOut } from 'lucide-react';
 import { Logo } from './logo';
 import { ThemeToggle } from './theme-toggle';
 import { SearchDialog } from './search-dialog';
@@ -15,7 +15,6 @@ import { useWishlist } from '@/components/providers/wishlist-provider';
 import { useAuth } from '@/components/providers/auth-provider';
 import { useScrolled } from '@/hooks/use-ui';
 import { categories } from '@/lib/data';
-import { SiteConfig } from '@/lib/site-config';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
@@ -158,15 +157,7 @@ export function Navbar() {
 
             <UserMenu />
 
-            <a
-              href={`tel:${SiteConfig.contact.phonePrimary.replace(/\s/g, '')}`}
-              className="hidden items-center gap-2 rounded-full border border-border/60 px-3 py-2 text-sm font-medium transition-colors hover:bg-secondary xl:inline-flex"
-            >
-              <Phone className="h-4 w-4 text-primary" />
-              {SiteConfig.contact.phonePrimary}
-            </a>
-
-            <Button asChild size="sm" className="hidden h-9 rounded-full px-4 lg:inline-flex">
+            <Button asChild size="sm" className="hidden h-9 shrink-0 rounded-full px-4 md:inline-flex">
               <Link href="/order">Order Now</Link>
             </Button>
 
@@ -297,13 +288,6 @@ export function Navbar() {
                     Order Now
                   </Link>
                 </Button>
-                <a
-                  href={`tel:${SiteConfig.contact.phonePrimary.replace(/\s/g, '')}`}
-                  className="mt-3 flex items-center justify-center gap-2 text-sm font-medium text-muted-foreground"
-                >
-                  <Phone className="h-4 w-4 text-primary" />
-                  {SiteConfig.contact.phonePrimary}
-                </a>
               </div>
             </motion.div>
           </div>
