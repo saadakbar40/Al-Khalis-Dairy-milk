@@ -3,7 +3,9 @@
 import { useState, useEffect, useMemo, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { Search, X, CornerDownLeft } from 'lucide-react';
-import { products, categories } from '@/lib/data';
+import { categories } from '@/lib/data';
+import { getAllProducts } from '@/lib/products';
+import type { Product } from '@/lib/data';
 import { cn } from '@/lib/utils';
 import { AnimatePresence, motion } from 'framer-motion';
 
@@ -26,7 +28,12 @@ export function SearchDialog({
   const router = useRouter();
   const [query, setQuery] = useState('');
   const [activeIndex, setActiveIndex] = useState(0);
+  const [products, setProducts] = useState<Product[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    getAllProducts().then(setProducts);
+  }, []);
 
   useEffect(() => {
     if (open) {
@@ -79,7 +86,7 @@ export function SearchDialog({
         href: `/products/${p.slug}`,
       }));
     return [...catMatches, ...productMatches];
-  }, [query]);
+  }, [query, products]);
 
   const selectItem = (href: string) => {
     onOpenChange(false);

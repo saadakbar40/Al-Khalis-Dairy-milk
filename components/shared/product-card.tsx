@@ -42,9 +42,12 @@ export function ProductCard({ product, index = 0 }: { product: Product; index?: 
     });
   };
 
-  const discount = product.oldPrice
-    ? Math.round(((product.oldPrice - product.price) / product.oldPrice) * 100)
-    : 0;
+  const discount =
+    product.discount && product.discount > 0
+      ? product.discount
+      : product.oldPrice
+        ? Math.round(((product.oldPrice - product.price) / product.oldPrice) * 100)
+        : 0;
 
   return (
     <motion.div

@@ -1,14 +1,24 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { products } from '@/lib/data';
-import { ProductCard } from '@/components/shared/product-card';
+import { ProductCard, ProductCardSkeleton } from '@/components/shared/product-card';
 import { Reveal } from '@/components/shared/reveal';
+import { getFeaturedProducts } from '@/lib/products';
+import type { Product } from '@/lib/data';
 
 export function FeaturedProducts() {
-  const featured = products.filter((p) => p.bestseller).slice(0, 4);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    getFeaturedProducts().then((data) => {
+      setProducts(data);
+      setLoading(false);
+    });
+  }, []);
 
   return (
     <section className="bg-secondary/30 py-20 sm:py-24">
@@ -36,9 +46,18 @@ export function FeaturedProducts() {
         </div>
 
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {featured.map((p, i) => (
-            <ProductCard key={p.id} product={p} index={i} />
-          ))}
+          {loading
+            ? Array.from({ length: 4 }).map((_, i) => <ProductCardSkeleton key={i} />)
+            : products.length > 0
+              ? products.map((p, i) => <ProductCard key={p.id} product={p} index={i} />)
+              : (
+                  <div className="col-span-full py-12 text-center">
+                    <p className="text-lg font-medium">No products available</p>
+                    <p className="mt-1 text-sm text-muted-foreground">
+                      Please check back soon — our fresh dairy is on the way.
+                    </p>
+                  </div>
+                )}
         </div>
       </div>
     </section>

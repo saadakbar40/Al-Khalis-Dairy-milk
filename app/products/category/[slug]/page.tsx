@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { categories, getProductsByCategory, getCategoryBySlug } from '@/lib/data';
+import { categories, getCategoryBySlug } from '@/lib/data';
+import { getProductsByCategory } from '@/lib/products';
 import { ProductGrid } from '@/components/products/product-grid';
 import { PageHero } from '@/components/shared/page-hero';
 import { Breadcrumbs } from '@/components/shared/breadcrumbs';
@@ -18,11 +19,11 @@ export function generateMetadata({ params }: { params: { slug: string } }): Meta
   };
 }
 
-export default function CategoryPage({ params }: { params: { slug: string } }) {
+export default async function CategoryPage({ params }: { params: { slug: string } }) {
   const category = getCategoryBySlug(params.slug);
   if (!category) notFound();
 
-  const categoryProducts = getProductsByCategory(params.slug);
+  const categoryProducts = await getProductsByCategory(params.slug);
 
   return (
     <>
@@ -36,7 +37,16 @@ export default function CategoryPage({ params }: { params: { slug: string } }) {
           items={[{ label: 'Products', href: '/products' }, { label: category.name }]}
           className="mb-8"
         />
-        <ProductGrid products={categoryProducts} showCategoryFilter={false} />
+        {categoryProducts.length > 0 ? (
+          <ProductGrid products={categoryProducts} showCategoryFilter={false} />
+        ) : (
+          <div className="py-20 text-center">
+            <p className="text-lg font-medium">No products available</p>
+            <p className="mt-1 text-sm text-muted-foreground">
+              We&apos;re stocking up on {category.name.toLowerCase()} — please check back soon.
+            </p>
+          </div>
+        )}
       </div>
     </>
   );

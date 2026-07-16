@@ -36,9 +36,12 @@ export function ProductInfo({ product }: { product: Product }) {
     setTimeout(() => setAdded(false), 2000);
   };
 
-  const discount = product.oldPrice
-    ? Math.round(((product.oldPrice - product.price) / product.oldPrice) * 100)
-    : 0;
+  const discount =
+    product.discount && product.discount > 0
+      ? product.discount
+      : product.oldPrice
+        ? Math.round(((product.oldPrice - product.price) / product.oldPrice) * 100)
+        : 0;
 
   return (
     <div className="flex flex-col">
