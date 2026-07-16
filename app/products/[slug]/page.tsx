@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { getAllProducts, getProductBySlug, getAllSlugs } from '@/lib/products';
+import { products, getProductBySlug } from '@/lib/data';
 import { ProductGallery } from '@/components/products/product-gallery';
 import { ProductInfo } from '@/components/products/product-info';
 import { ProductCard } from '@/components/shared/product-card';
@@ -9,13 +9,12 @@ import { Reveal } from '@/components/shared/reveal';
 import { Check } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
-export async function generateStaticParams() {
-  const slugs = await getAllSlugs();
-  return slugs.map((slug) => ({ slug }));
+export function generateStaticParams() {
+  return products.map((p) => ({ slug: p.slug }));
 }
 
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
-  const product = await getProductBySlug(params.slug);
+export function generateMetadata({ params }: { params: { slug: string } }): Metadata {
+  const product = getProductBySlug(params.slug);
   if (!product) return { title: 'Product Not Found' };
   return {
     title: product.name,
@@ -23,12 +22,11 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   };
 }
 
-export default async function ProductDetailPage({ params }: { params: { slug: string } }) {
-  const product = await getProductBySlug(params.slug);
+export default function ProductDetailPage({ params }: { params: { slug: string } }) {
+  const product = getProductBySlug(params.slug);
   if (!product) notFound();
 
-  const allProducts = await getAllProducts();
-  const related = allProducts
+  const related = products
     .filter((p) => p.categorySlug === product.categorySlug && p.id !== product.id)
     .slice(0, 4);
 
