@@ -6,7 +6,7 @@ import { AboutPreview } from '@/components/home/about-preview';
 import { TestimonialSection } from '@/components/home/testimonial-section';
 import { CTASection } from '@/components/home/cta-section';
 
-export default function HomePage() {
+export default async function HomePage() {
   return (
     <>
       <HeroSlider />
