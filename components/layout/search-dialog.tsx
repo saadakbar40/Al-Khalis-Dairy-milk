@@ -3,9 +3,10 @@
 import { useState, useEffect, useMemo, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { Search, X, CornerDownLeft } from 'lucide-react';
-import { products, categories } from '@/lib/data';
+import { supabase } from '@/lib/supabase';
 import { cn } from '@/lib/utils';
 import { AnimatePresence, motion } from 'framer-motion';
+import type { ProductCategory } from '@/lib/data';
 
 type SearchResult = {
   type: 'product' | 'category';
@@ -16,16 +17,28 @@ type SearchResult = {
   href: string;
 };
 
+type SearchProduct = {
+  id: string;
+  name: string;
+  slug: string;
+  category: string;
+  short_description: string;
+  image_url: string;
+};
+
 export function SearchDialog({
   open,
   onOpenChange,
+  categories,
 }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  categories: ProductCategory[];
 }) {
   const router = useRouter();
   const [query, setQuery] = useState('');
   const [activeIndex, setActiveIndex] = useState(0);
+  const [products, setProducts] = useState<SearchProduct[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -35,6 +48,20 @@ export function SearchDialog({
       setTimeout(() => inputRef.current?.focus(), 50);
     }
   }, [open]);
+
+  useEffect(() => {
+    if (!open || products.length > 0) return;
+    (async () => {
+      try {
+        const { data, error } = await supabase
+          .from('products')
+          .select('id, name, slug, category, short_description, image_url');
+        if (!error && data) setProducts(data as SearchProduct[]);
+      } catch {
+        /* ignore */
+      }
+    })();
+  }, [open, products.length]);
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
@@ -67,7 +94,7 @@ export function SearchDialog({
         (p) =>
           p.name.toLowerCase().includes(q) ||
           p.category.toLowerCase().includes(q) ||
-          p.shortDescription.toLowerCase().includes(q)
+          p.short_description.toLowerCase().includes(q)
       )
       .slice(0, 6)
       .map((p) => ({
@@ -75,11 +102,11 @@ export function SearchDialog({
         id: p.id,
         label: p.name,
         sublabel: p.category,
-        image: p.images[0],
+        image: p.image_url,
         href: `/products/${p.slug}`,
       }));
     return [...catMatches, ...productMatches];
-  }, [query]);
+  }, [query, categories, products]);
 
   const selectItem = (href: string) => {
     onOpenChange(false);

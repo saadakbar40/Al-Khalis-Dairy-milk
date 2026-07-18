@@ -1,11 +1,22 @@
-'use client';
-
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
-import { categories } from '@/lib/data';
+import { getAllCategories } from '@/lib/products';
 import { Reveal } from '@/components/shared/reveal';
 
-export function CategoryGrid() {
+export const revalidate = 3600;
+
+export async function CategoryGrid() {
+  let categories: Awaited<ReturnType<typeof getAllCategories>> = [];
+  try {
+    categories = await getAllCategories();
+  } catch {
+    categories = [];
+  }
+
+  if (categories.length === 0) {
+    return null;
+  }
+
   return (
     <section className="py-20 sm:py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
