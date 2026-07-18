@@ -2,23 +2,18 @@
 
 import { useState, useMemo } from 'react';
 import { ProductCard, ProductCardSkeleton } from '@/components/shared/product-card';
-import type { Product, ProductCategory } from '@/lib/data';
+import { Product, categories } from '@/lib/data';
 import { cn } from '@/lib/utils';
 import { SlidersHorizontal } from 'lucide-react';
 
 type ProductGridProps = {
   products: Product[];
-  categories?: ProductCategory[];
   showCategoryFilter?: boolean;
 };
 
 type SortKey = 'featured' | 'price-low' | 'price-high' | 'rating';
 
-export function ProductGrid({
-  products: allProducts,
-  categories = [],
-  showCategoryFilter = true,
-}: ProductGridProps) {
+export function ProductGrid({ products: allProducts, showCategoryFilter = true }: ProductGridProps) {
   const [category, setCategory] = useState<string>('all');
   const [sort, setSort] = useState<SortKey>('featured');
   const [loading] = useState(false);

@@ -1,23 +1,14 @@
+'use client';
+
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { getFeaturedProducts } from '@/lib/products';
+import { products } from '@/lib/data';
 import { ProductCard } from '@/components/shared/product-card';
 import { Reveal } from '@/components/shared/reveal';
 
-export const revalidate = 3600;
-
-export async function FeaturedProducts() {
-  let featured: Awaited<ReturnType<typeof getFeaturedProducts>> = [];
-  try {
-    featured = await getFeaturedProducts(4);
-  } catch {
-    featured = [];
-  }
-
-  if (featured.length === 0) {
-    return null;
-  }
+export function FeaturedProducts() {
+  const featured = products.filter((p) => p.bestseller).slice(0, 4);
 
   return (
     <section className="bg-secondary/30 py-20 sm:py-24">

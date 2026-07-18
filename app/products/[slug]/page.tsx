@@ -1,10 +1,6 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import {
-  getProductBySlug,
-  getRelatedProducts,
-  getAllSlugs,
-} from '@/lib/products';
+import { products, getProductBySlug } from '@/lib/data';
 import { ProductGallery } from '@/components/products/product-gallery';
 import { ProductInfo } from '@/components/products/product-info';
 import { ProductCard } from '@/components/shared/product-card';
@@ -13,53 +9,26 @@ import { Reveal } from '@/components/shared/reveal';
 import { Check } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
-export const revalidate = 3600;
-
-export async function generateStaticParams() {
-  try {
-    const slugs = await getAllSlugs();
-    return slugs.map((slug) => ({ slug }));
-  } catch {
-    return [];
-  }
+export function generateStaticParams() {
+  return products.map((p) => ({ slug: p.slug }));
 }
 
-export async function generateMetadata({
-  params,
-}: {
-  params: { slug: string };
-}): Promise<Metadata> {
-  try {
-    const product = await getProductBySlug(params.slug);
-    if (!product) return { title: 'Product Not Found' };
-    return {
-      title: product.name,
-      description: product.shortDescription,
-    };
-  } catch {
-    return { title: 'Product Not Found' };
-  }
+export function generateMetadata({ params }: { params: { slug: string } }): Metadata {
+  const product = getProductBySlug(params.slug);
+  if (!product) return { title: 'Product Not Found' };
+  return {
+    title: product.name,
+    description: product.shortDescription,
+  };
 }
 
-export default async function ProductDetailPage({
-  params,
-}: {
-  params: { slug: string };
-}) {
-  let product;
-  try {
-    product = await getProductBySlug(params.slug);
-  } catch {
-    notFound();
-  }
+export default function ProductDetailPage({ params }: { params: { slug: string } }) {
+  const product = getProductBySlug(params.slug);
   if (!product) notFound();
 
-  let related: Awaited<ReturnType<typeof getRelatedProducts>> = [];
-  try {
-    related = await getRelatedProducts(product.categorySlug, product.id, 4);
-  } catch {
-    related = [];
-  }
+  const related = products
+    .filter((p) => p.categorySlug === product.categorySlug && p.id !== product.id)
+    .slice(0, 4);
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
